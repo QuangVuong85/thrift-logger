@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"thrift-logger/gen-go/loggerservice"
+	"time"
 
 	"github.com/apache/thrift/lib/go/thrift"
 )
@@ -18,28 +19,28 @@ type LoggerHandler struct {
 }
 
 func (this *LoggerHandler) Timestamp(ctx context.Context, filename string) (err error) {
-	// file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE)
-	// if err != nil {
-	// 	return err
-	// }
+	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE)
+	if err != nil {
+		return err
+	}
 
-	// if file.Open() {
-	// 	now := time.Now().String()
-	// 	_, err := f.WriteString(now)
-	// 	if err != nil {
-	// 		defer file.Close()
-	// 		return err
-	// 	}
+	if file.Open() {
+		now := time.Now().String()
+		_, err := file.WriteString(now)
+		if err != nil {
+			defer file.Close()
+			return err
+		}
 
-	// 	fmt.Println(now)
+		fmt.Println(now)
 
-	// 	defer file.Close()
-	// } else {
-	// 	err := loggerservice.LoggerException{}
-	// 	err.ErrorCode = 1
-	// 	err.ErrorDescription = "Could not open file " + filename
-	// 	return err
-	// }
+		defer file.Close()
+	} else {
+		err := loggerservice.LoggerException{}
+		err.ErrorCode = 1
+		err.ErrorDescription = "Could not open file " + filename
+		return err
+	}
 
 	return nil
 
