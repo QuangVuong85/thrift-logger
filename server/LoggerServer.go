@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"thrift-logger/gen-go/loggerservice"
@@ -15,97 +16,54 @@ const (
 	NetWorkAddr = "127.0.0.1:9090"
 )
 
-type LoggerHandler struct {
-}
+type LoggerHandler struct{}
 
-func (this *LoggerHandler) Timestamp(ctx context.Context, filename string) (err error) {
-	file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE)
+func (this *LoggerHandler) Timestamp(ctx context.Context, filename string) error {
+
+	now := []byte(time.Now().String())
+
+	err := ioutil.WriteFile(filename, now, 0775)
 	if err != nil {
 		return err
 	}
 
-	if file.Open() {
-		now := time.Now().String()
-		_, err := file.WriteString(now)
-		if err != nil {
-			defer file.Close()
-			return err
-		}
-
-		fmt.Println(now)
-
-		defer file.Close()
-	} else {
-		err := loggerservice.LoggerException{}
-		err.ErrorCode = 1
-		err.ErrorDescription = "Could not open file " + filename
-		return err
-	}
-
 	return nil
 
 }
 
-func (this *LoggerHandler) GetLastLogEntry(ctx context.Context, filename string) (r string, err error) {
-	// file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE)
-	// if err != nil {
-	// 	return "", err
-	// }
-
-	// if file.Open() {
-	// 	last := nil
-	// 	///
-
-	// 	defer file.Close()
-	// } else {
-	// 	err := loggerservice.LoggerException{}
-	// 	err.ErrorCode = 1
-	// 	err.ErrorDescription = "Could not open file " + filename
-	// 	return "", err
-	// }
+func (this *LoggerHandler) GetLastLogEntry(ctx context.Context, filename string) (string, error) {
+	err := ioutil.WriteFile(filename, []byte(message), 0775)
+	if err != nil {
+		return nil, err
+	}
 
 	return "", nil
 }
 
-func (this *LoggerHandler) WriteLog(ctx context.Context, filename string, message string) (err error) {
-	// file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE)
-	// if err != nil {
-	// 	return err
-	// }
-
-	// if file.Open() {
-	// 	fmt.Println(message)
-
-	// 	defer file.Close()
-	// } else {
-	// 	err := loggerservice.LoggerException{}
-	// 	err.ErrorCode = 1
-	// 	err.ErrorDescription = "Could not open file " + filename
-	// 	return err
-	// }
+func (this *LoggerHandler) WriteLog(ctx context.Context, filename string, message string) error {
+	err := ioutil.WriteFile(filename, []byte(message), 0775)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
 
-func (this *LoggerHandler) GetLogSize(ctx context.Context, filename string) (r int32, err error) {
-
+func (this *LoggerHandler) GetLogSize(ctx context.Context, filename string) (int32, error) {
 	var fs int32 = 0
 
-	// file, err := os.OpenFile(filename, os.O_RDWR|os.O_CREATE)
-	// if err != nil {
-	// 	return 0, err
-	// }
+	file, err := os.Open(filename)
+	defer file.Close()
+	if err != nil {
+		return 0, err
+	}
 
-	// if file.Open() {
-	// 	fs = file.GetLogSize()
+	info, err := file.Stat()
+	if err != nil {
+		return 0, err
+	}
 
-	// 	defer file.Close()
-	// } else {
-	// 	err := loggerservice.LoggerException{}
-	// 	err.ErrorCode = 1
-	// 	err.ErrorDescription = "Could not open file " + filename
-	// 	return nil, err
-	// }
+	fs = int32(info.Size())
 
 	return fs, nil
 }
