@@ -36,5 +36,11 @@ brew install boost
 * Run server: /server/LoggerServer.cpp
 * Run client: /server/LoggerClient.cpp
 
+## Build use cmake:
+* mkdir build
+* cd build
+* make ..
+* make
+
 ## Other:
 Used languages: C++, Golang, Python 3

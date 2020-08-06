@@ -13,9 +13,8 @@ using namespace apache::thrift::transport;
 using namespace LoggerCpp;
 using boost::shared_ptr;
 
-int main(int argc, char **argv)
-{
-    char logfile[]="logfile.log";
+int main(int argc, char **argv) {
+    char logfile[] = "logfile.log";
     std::string line;
 
     std::shared_ptr<TSocket> socket(new TSocket("localhost", 9090));
@@ -24,8 +23,7 @@ int main(int argc, char **argv)
 
     LoggerClient client(protocol);
 
-    try
-    {
+    try {
 
         transport->open();
 
@@ -42,13 +40,11 @@ int main(int argc, char **argv)
         transport->close();
     }
 
-    catch (TTransportException e)
-    {
-        std::cout << "Error starting client" << std::endl;
+    catch (const TTransportException &e) {
+        std::cout << "Error starting client " << e.getType() << std::endl;
     }
 
-    catch (LoggerException e)
-    {
+    catch (const LoggerException &e) {
         std::cout << e.error_description << std::endl;
     }
 

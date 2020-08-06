@@ -3,4 +3,5 @@ gen-cpp/
 gen-py/
 gen-go/
 
+build/
 .idea/

@@ -9,7 +9,6 @@
 #include <thrift/transport/TBufferTransports.h>
 
 #include <chrono>
-#include <cstdio>
 #include <fstream>
 #include <string>
 #include <iostream>

@@ -32,7 +32,7 @@ func (this *LoggerHandler) Timestamp(ctx context.Context, filename string) error
 }
 
 func (this *LoggerHandler) GetLastLogEntry(ctx context.Context, filename string) (string, error) {
-	err := ioutil.WriteFile(filename, []byte(message), 0775)
+	err := ioutil.ReadFile(filename)
 	if err != nil {
 		return nil, err
 	}
